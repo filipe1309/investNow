@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">investNow</string>
+    <string name="action_settings">Configurações</string>
+    <string name="indicators">Indicadores</string>
+</resources>
