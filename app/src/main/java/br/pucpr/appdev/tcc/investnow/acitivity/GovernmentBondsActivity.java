@@ -10,24 +10,22 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import java.util.List;
 
-import br.pucpr.appdev.tcc.investnow.IndicatorApiService;
+import br.pucpr.appdev.tcc.investnow.GovernmentBondApiService;
 import br.pucpr.appdev.tcc.investnow.R;
-import br.pucpr.appdev.tcc.investnow.adapter.IndicatorsAdapter;
-import br.pucpr.appdev.tcc.investnow.model.Indicator;
-import br.pucpr.appdev.tcc.investnow.model.IndicatorResponse;
+import br.pucpr.appdev.tcc.investnow.adapter.GovernmentBondsAdapter;
+import br.pucpr.appdev.tcc.investnow.model.GovernmentBond;
+import br.pucpr.appdev.tcc.investnow.model.GovernmentBondResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class GovernmentBondsActivity extends AppCompatActivity {
+    private static final String TAG = GovernmentBondsActivity.class.getSimpleName();
 
     public static final String BASE_URL = "https://tcc-pucpr-nodejs-server-filipe1309.c9users.io/";
 
@@ -38,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_government_bonds);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,19 +44,18 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Titulos", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Indicadores", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity.this, GovernmentBondsActivity.class);
+                Intent intent = new Intent(GovernmentBondsActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_government_bonds);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         connectAndGetApiData();
     }
-
     // This method create an instance of Retrofit
     // set the base url
     public void connectAndGetApiData(){
@@ -69,44 +66,22 @@ public class MainActivity extends AppCompatActivity {
                     .build();
         }
 
-        IndicatorApiService indicatorApiService = retrofit.create(IndicatorApiService.class);
+        GovernmentBondApiService governmentBondApiService= retrofit.create(GovernmentBondApiService.class);
 
-        Call<IndicatorResponse> call = indicatorApiService.getIndicators();
+        Call<GovernmentBondResponse> call = governmentBondApiService.getGovernmentBonds();
 
-        call.enqueue(new Callback<IndicatorResponse>() {
+        call.enqueue(new Callback<GovernmentBondResponse>() {
             @Override
-            public void onResponse(Call<IndicatorResponse> call, Response<IndicatorResponse> response) {
-                List<Indicator> movies = response.body().getResults();
-                recyclerView.setAdapter(new IndicatorsAdapter(movies, R.layout.list_item_indicator, getApplicationContext()));
+            public void onResponse(Call<GovernmentBondResponse> call, Response<GovernmentBondResponse> response) {
+                List<GovernmentBond> movies = response.body().getResults();
+                recyclerView.setAdapter(new GovernmentBondsAdapter(movies, R.layout.list_item_government_bonds, getApplicationContext()));
             }
 
             @Override
 
-            public void onFailure(Call<IndicatorResponse> call, Throwable throwable) {
+            public void onFailure(Call<GovernmentBondResponse> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
