@@ -53,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton learn = (FloatingActionButton) findViewById(R.id.fab_learn);
+        learn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, LearnActivity.class);
+                startActivity(intent);
+            }
+        });
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -76,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<IndicatorResponse>() {
             @Override
             public void onResponse(Call<IndicatorResponse> call, Response<IndicatorResponse> response) {
-                List<Indicator> movies = response.body().getResults();
-                recyclerView.setAdapter(new IndicatorsAdapter(movies, R.layout.list_item_indicator, getApplicationContext()));
+                List<Indicator> indicators = response.body().getResults();
+                recyclerView.setAdapter(new IndicatorsAdapter(indicators, R.layout.list_item_indicator, getApplicationContext()));
             }
 
             @Override

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.pucpr.appdev.tcc.investnow.acitivity.MainActivity">
+    tools:context="br.pucpr.appdev.tcc.investnow.acitivity.LearnActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_learn" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -28,14 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_search" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_learn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_sort_alphabetically" />
+        app:srcCompat="@android:drawable/ic_menu_revert" />
 
 </android.support.design.widget.CoordinatorLayout>
