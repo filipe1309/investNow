@@ -2,6 +2,6 @@
     <string name="app_name">investNow</string>
     <string name="action_settings">Configurações</string>
     <string name="indicators">Indicadores</string>
-    <string name="title_activity_government_bonds">GovernmentBondsActivity</string>
-    <string name="title_activity_learn">LearnActivity</string>
+    <string name="title_activity_government_bonds">Títulos</string>
+    <string name="title_activity_learn">Aprenda</string>
 </resources>
