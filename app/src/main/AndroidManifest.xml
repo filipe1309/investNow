@@ -28,7 +28,12 @@
         <activity
             android:name=".acitivity.LearnActivity"
             android:label="@string/title_activity_learn"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".acitivity.IndicatorsActivity"
+            android:label="@string/title_activity_indicators"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

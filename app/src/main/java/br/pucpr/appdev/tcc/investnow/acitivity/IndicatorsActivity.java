@@ -9,9 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.List;
 
@@ -26,13 +26,19 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class IndicatorsActivity extends AppCompatActivity {
+    private static final String TAG = IndicatorsActivity.class.getSimpleName();
+
+    public static final String BASE_URL = "https://tcc-pucpr-nodejs-server-filipe1309.c9users.io/";
+
+    private static Retrofit retrofit = null;
+
+    private RecyclerView recyclerView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_indicators);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Indicadores", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Titulos", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Intent intent = new Intent(MainActivity.this, IndicatorsActivity.class);
+                Intent intent = new Intent(IndicatorsActivity.this, GovernmentBondsActivity.class);
                 startActivity(intent);
             }
         });
@@ -51,11 +57,44 @@ public class MainActivity extends AppCompatActivity {
         learn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, LearnActivity.class);
+                Intent intent = new Intent(IndicatorsActivity.this, LearnActivity.class);
                 startActivity(intent);
             }
         });
 
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        connectAndGetApiData();
+    }
+
+    // This method create an instance of Retrofit
+    // set the base url
+    public void connectAndGetApiData(){
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+
+        IndicatorApiService indicatorApiService = retrofit.create(IndicatorApiService.class);
+
+        Call<IndicatorResponse> call = indicatorApiService.getIndicators();
+
+        call.enqueue(new Callback<IndicatorResponse>() {
+            @Override
+            public void onResponse(Call<IndicatorResponse> call, Response<IndicatorResponse> response) {
+                List<Indicator> indicators = response.body().getResults();
+                recyclerView.setAdapter(new IndicatorsAdapter(indicators, R.layout.list_item_indicator, getApplicationContext()));
+            }
+
+            @Override
+
+            public void onFailure(Call<IndicatorResponse> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+            }
+        });
     }
 
     @Override
