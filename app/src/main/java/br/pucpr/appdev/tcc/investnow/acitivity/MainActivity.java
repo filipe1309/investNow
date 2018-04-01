@@ -3,7 +3,11 @@ package br.pucpr.appdev.tcc.investnow.acitivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +27,7 @@ import br.pucpr.appdev.tcc.investnow.MainCard;
 import br.pucpr.appdev.tcc.investnow.R;
 import br.pucpr.appdev.tcc.investnow.adapter.IndicatorsAdapter;
 import br.pucpr.appdev.tcc.investnow.adapter.MainAdapter;
+import br.pucpr.appdev.tcc.investnow.model.GovernmentBond;
 import br.pucpr.appdev.tcc.investnow.model.Indicator;
 import br.pucpr.appdev.tcc.investnow.model.IndicatorResponse;
 import retrofit2.Call;
@@ -34,6 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ListView mListView;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +47,51 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        //getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_lis);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.menu_hb);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        Log.d(TAG, "Clicou: " + menuItem.getItemId());
+                        Intent intent;
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_indicators:
+                                intent = new Intent(MainActivity.this, IndicatorsActivity.class);
+                                startActivity(intent);
+                                break;
+                            case R.id.nav_gov_bonds:
+                                intent = new Intent(MainActivity.this, GovernmentBondsActivity.class);
+                                startActivity(intent);
+                                break;
+                            case R.id.nav_learn:
+                                intent = new Intent(MainActivity.this, LearnActivity.class);
+                                startActivity(intent);
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
+
+
+
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, LearnActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         mListView = (ListView) findViewById(R.id.listView);
 
@@ -95,22 +144,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);

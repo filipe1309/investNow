@@ -35,6 +35,11 @@
                 android:textStyle="bold"
                 android:textAllCaps="true"
                 android:text="Card Title"
+                android:textColor="@color/colorWhite"
+                android:shadowColor="@color/colorBlack"
+                android:shadowDx="4"
+                android:shadowDy="4"
+                android:shadowRadius="6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </RelativeLayout>
