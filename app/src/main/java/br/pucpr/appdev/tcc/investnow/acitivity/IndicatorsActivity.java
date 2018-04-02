@@ -3,7 +3,11 @@ package br.pucpr.appdev.tcc.investnow.acitivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,12 +32,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class IndicatorsActivity extends AppCompatActivity {
     private static final String TAG = IndicatorsActivity.class.getSimpleName();
-
     public static final String BASE_URL = "https://tcc-pucpr-nodejs-server-filipe1309.c9users.io/";
-
     private static Retrofit retrofit = null;
-
     private RecyclerView recyclerView = null;
+    private DrawerLayout mDrawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,28 +44,52 @@ public class IndicatorsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_indicators);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.menu_hb);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        Intent intent;
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_home:
+                                intent = new Intent(IndicatorsActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                break;
+                            case R.id.nav_gov_bonds:
+                            intent = new Intent(IndicatorsActivity.this, GovernmentBondsActivity.class);
+                            startActivity(intent);
+                            break;
+                            case R.id.nav_learn:
+                                intent = new Intent(IndicatorsActivity.this, LearnActivity.class);
+                                startActivity(intent);
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Titulos", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent intent = new Intent(IndicatorsActivity.this, GovernmentBondsActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
-        FloatingActionButton learn = (FloatingActionButton) findViewById(R.id.fab_learn);
-        learn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(IndicatorsActivity.this, LearnActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.rc_indicators);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         connectAndGetApiData();
@@ -98,21 +125,14 @@ public class IndicatorsActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
         }
 

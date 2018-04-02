@@ -3,13 +3,18 @@ package br.pucpr.appdev.tcc.investnow.acitivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +36,7 @@ public class LearnActivity extends AppCompatActivity {
 
     private static final String TAG = "Learn";
     public RecyclerView mRecyclerView;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,31 +44,50 @@ public class LearnActivity extends AppCompatActivity {
         setContentView(R.layout.activity_learn);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.menu_hb);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        Intent intent;
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_home:
+                                intent = new Intent(LearnActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                break;
+                            case R.id.nav_indicators:
+                                intent = new Intent(LearnActivity.this, IndicatorsActivity.class);
+                                startActivity(intent);
+                                break;
+                            case R.id.nav_gov_bonds:
+                                intent = new Intent(LearnActivity.this, GovernmentBondsActivity.class);
+                                startActivity(intent);
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(LearnActivity.this, MainActivity.class);
-                startActivity(intent);*/
                 finish();
             }
         });
-
-
-        /*LearnChild text1 = new LearnChild("txt1op1", "txt1op2");
-        LearnChild text2 = new LearnChild("txt2op1", "txt2opt2");
-        LearnChild text3 = new LearnChild("txt3op1", "txt2opt2");
-
-        LearnParent opt1 = new LearnParent("t1", Arrays.asList(text1, text2, text3));
-        LearnParent opt2 = new LearnParent("t2", Arrays.asList(text1, text2, text3));
-        List<LearnParent> learns = Arrays.asList(opt1, opt2);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.rc_learn);
-        LearnParentAdapter adapter = new LearnParentAdapter(this, learns);
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));*/
-
 
         // Firebase
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -103,6 +128,21 @@ public class LearnActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
