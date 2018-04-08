@@ -21,6 +21,7 @@
                 android:title="Aprenda" />
             <item
                 android:id="@+id/nav_alert"
+                android:enabled="false"
                 android:icon="@android:drawable/ic_popup_reminder"
                 android:title="Alertas" />
         </group>
