@@ -114,12 +114,14 @@ public class IndicatorsActivity extends AppCompatActivity {
             public void onResponse(Call<IndicatorResponse> call, Response<IndicatorResponse> response) {
                 List<Indicator> indicators = response.body().getResults();
                 recyclerView.setAdapter(new IndicatorsAdapter(indicators, R.layout.list_item_indicator, getApplicationContext()));
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             }
 
             @Override
 
             public void onFailure(Call<IndicatorResponse> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             }
         });
     }

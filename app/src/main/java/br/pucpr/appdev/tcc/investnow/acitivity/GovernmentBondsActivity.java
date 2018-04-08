@@ -124,12 +124,14 @@ public class GovernmentBondsActivity extends AppCompatActivity {
             public void onResponse(Call<GovernmentBondResponse> call, Response<GovernmentBondResponse> response) {
                 List<GovernmentBond> movies = response.body().getResults();
                 recyclerView.setAdapter(new GovernmentBondsAdapter(movies, R.layout.list_item_government_bonds, getApplicationContext()));
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             }
 
             @Override
 
             public void onFailure(Call<GovernmentBondResponse> call, Throwable throwable) {
                 Log.e(TAG, throwable.toString());
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             }
         });
     }
